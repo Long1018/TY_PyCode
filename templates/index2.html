@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页分页</title>
+</head>
+<body>
+<div id="content"  >
+    <ul class="clearfix">
+
+        {% for movie in movies %}
+            <li>
+                <a href="{{ movie.mlink }}"><img src="{{ movie.mimg }}"/></a>
+                <h1 class="h1">{{ movie.mname }}</h1>
+                <span class="tip">{{ movie.mdesc }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<div id="pagebar">
+    <a href="/movie/?num={{ pre_page }}">上一页</a>
+    <a href="/movie/?num={{ next_page }}">下一页</a>
+</div>
+</body>
+</html>
