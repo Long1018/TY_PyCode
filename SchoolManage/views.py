@@ -18,11 +18,7 @@ def SLmanage(request):
     pre_page = num - 1
     next_page = num + 1
 
-    return render(request, 'index2.html', {'movies': mvs, 'pre_page': pre_page, 'next_page': next_page})
-
-    # select_DB = list(SckoolManageSql.objects.all()[:20].values('id', 'name', 'period', 'area', 'edu_group', 'create_at'))
-    # result = {'responseCode': 0, 'responseMsg': '查询成功', 'data': select_DB}
-
+    result = {'responseCode': 1, 'responseMsg': '分页', 'data': mvs, 'pre_page': pre_page, 'next_page': next_page}
     return JsonResponse(result, safe=False, json_dumps_params={'ensure_ascii': False})
 
 
@@ -38,7 +34,9 @@ def page(number, size=20):
     if number > total_page:
         number = total_page
     # 获取当前页码数据
-    mvs = list(SckoolManageSql.objects.all()[((number - 1) * size):(number * size)].values('id', 'name', 'period', 'area',                                                                         'edu_group', 'create_at'))
+    mvs = list(
+        SckoolManageSql.objects.all()[((number - 1) * size):(number * size)].values('id', 'name', 'period', 'area',
+                                                                                    'edu_group', 'create_at'))
     return mvs
 
 
@@ -104,7 +102,7 @@ def ManageExcel(n_value):
                         counts += 1
                         ShoolData.append(row)
                     try:
-                        # 关联账号标志 ID_number      #--------------------------------注意传值------------
+                        # 关联账号标志 ID_number      #----------默认为1后期传值-------------
                         ID_number = 1
                         Save_result = SckoolManageSql.SaveDataBase(ShoolData, ID_number)
                         if Save_result == '导入数据库异常':
@@ -128,3 +126,39 @@ def FileDownload(request):
         os.makedirs('ExampleFiles')
     else:
         pass
+
+
+# 增删改查
+def schoolAdd(request):
+    ShoolDatas = []
+    # 关联账号标志 ID_number      #--------默认为1后期传值------------
+    ID_number = 1
+    if request.method == 'GET':
+        return render(request, 'index2.html')
+    elif request.method == 'POST':
+        uname = request.POST.get('uname')
+        ShoolDatas.append(uname)
+        uarea = request.POST.get('uarea')
+        ShoolDatas.append(uarea)
+        uedu_group = request.POST.get('uedu_group')
+        ShoolDatas.append(uedu_group)
+        uperiod = request.POST.get('period')
+        ShoolDatas.append(uperiod)
+        utel = request.POST.get('utel')
+        ShoolDatas.append(utel)
+        uemail = request.POST.get('uemail')
+        ShoolDatas.append(uemail)
+        ucover = request.POST.get('ucover')
+        ShoolDatas.append(ucover)
+        uremark = request.POST.get('uremark')
+        ShoolDatas.append(uremark)
+        Save_result = SckoolManageSql.SaveSchoolData(ShoolDatas, ID_number)
+        if Save_result == '导入数据库异常':
+            result = {'responseCode': 2, 'responseMsg': '导入失败', 'data': '导入数据库异常'}
+            return JsonResponse(result, safe=False, json_dumps_params={'ensure_ascii': False})
+        else:
+            result = {'responseCode': 1, 'responseMsg': '导入成功', 'data': '导入数据库成功'}
+            return JsonResponse(result, safe=False, json_dumps_params={'ensure_ascii': False})
+    else:
+        result = {'responseCode': 2, 'responseMsg': '导入失败', 'data': '导入数据库异常'}
+        return JsonResponse(result, safe=False, json_dumps_params={'ensure_ascii': False})

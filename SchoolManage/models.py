@@ -51,3 +51,23 @@ class SckoolManageSql(models.Model):
         except Exception as ErrorResult:
             print(ErrorResult)
             return '导入数据库异常'
+
+    # 新增学校
+    def SaveSchoolData(ShoolDatas, ID_number):
+        try:
+            list_ID_number = str(ID_number)
+            list_name = ShoolDatas[0]
+            list_area = ShoolDatas[1]
+            list_edu_group = ShoolDatas[2]
+            list_period = ShoolDatas[3]
+            tel = ShoolDatas[4]
+            list_tel = str(tel)
+            email = ShoolDatas[5]
+            list_email = str(email)
+            with connection.cursor() as sqls:
+                sqls.execute(
+                    "insert into data_school(parent_id,name,area,edu_group,period,tel,email)" + " values('" + list_ID_number + "','" + list_name + "','" + list_area + "','" + list_edu_group + "','" + list_period + "','" + list_tel + "','" + list_email + "');");
+            print('导入成功')
+        except Exception as ErrorResult:
+            print(ErrorResult)
+            return '导入数据库异常'
