@@ -2,7 +2,6 @@
 
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.http import HttpResponse
 from SchoolManage.models import SckoolManageSql
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -11,7 +10,7 @@ import os, xlrd, math
 
 def SLmanage(request):
     # 接收请求
-    num = request.GET.get("num", 1)
+    num = request.POST.get("number", 1)
     # 查询
     num = int(num)
     mvs = page(num)
